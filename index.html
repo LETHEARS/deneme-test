@@ -3,37 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Görkemli Yazılım | Kişisel Portfolyo</title>
+    <title>Görkemli Yazılım | Portfolyo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
     <style>
-        /* --- HATALARI ÖNLEYEN TEMİZ CSS --- */
-        :root {
-            --bg-color: #020202;
-            --card-bg: #0d1117;
-            --accent-color: #00ffd5; /* Parlayan camgöbeği */
-            --text-color: #ffffff;
-        }
+        /* TEMEL AYARLAR */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: #020202; color: white; overflow-x: hidden; }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* --- NAVİGASYON --- */
+        /* HEADER & MENÜ */
         header {
-            position: fixed;
-            top: 0;
+            position: fixed; top: 0; width: 100%; padding: 20px 8%;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 1000; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+        }
+        .logo { font-size: 24px; font-weight: bold; border-bottom: 3px solid #00ffd5; }
+        .logo span { color: #00ffd5; }
+        
+        .menu-btn { font-size: 30px; color: #00ffd5; cursor: pointer; z-index: 1001; }
+        
+        .nav-links {
+            position: fixed; top: 0; right: -100%; width: 100%; height: 100vh;
+            background: rgba(2, 2, 2, 0.95); display: flex; flex-direction: column;
+            justify-content: center; align-items: center; transition: 0.4s; z-index: 999;
+        }
+        .nav-links.active { right: 0; }
+        .nav-links a { color: white; font-size: 28px; text-decoration: none; margin: 20px; font-weight: 600; }
+        .nav-links a:hover { color: #00ffd5; text-shadow: 0 0 10px #00ffd5; }
+
+        /* SAYFA YAPISI */
+        section { min-height: 100vh; padding: 120px 8% 40px; display: none; }
+        section.active { display: flex; align-items: center; animation: fadeIn 0.5s ease; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* PORTFOLYO BÖLÜMÜ */
+        .hero-content { flex: 1; }
+        .hero-content h1 { font-size: 45px; margin-bottom: 10px; }
+        .hero-content h3 { color: #00ffd5; font-size: 24px; margin-bottom: 20px; }
+        .hero-content p { color: #ccc; max-width: 500px; margin-bottom: 30px; }
+
+        .image-container { flex: 1; display: flex; justify-content: center; position: relative; }
+        .glowing-circle {
+            width: 350px; height: 350px; border-radius: 50%;
+            border: 4px solid #00ffd5; box-shadow: 0 0 30px #00ffd5, inset 0 0 20px #00ffd5;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .glowing-circle img { width: 60%; filter: drop-shadow(0 0 10px #00ffd5); }
+
+        /* BUTONLAR */
+        .btn-box { display: flex; gap: 15px; margin-top: 20px; }
+        .btn {
+            padding: 12px 28px; border-radius: 25px; text-decoration: none; font-weight: bold;
+            transition: 0.3s; border: 2px solid #00ffd5;
+        }
+        .btn-fill { background: #00ffd5; color: black; box-shadow: 0 0 15px #00ffd5; }
+        .btn-outline { color: #00ffd5; }
+        .btn:hover { transform: scale(1.05); }
+
+        /* NOTLAR BÖLÜMÜ */
+        .note-card { background: #0d1117; padding: 25px; border-radius: 15px; border: 1px solid #333; width: 100%; }
+        .media-item { margin-top: 25px; padding: 15px; background: #000; border-radius: 10px; }
+        video, audio { width: 100%; margin-top: 10px; border-radius: 8px; }
+
+        /* DEVELOPER BÖLÜMÜ */
+        .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; width: 100%; }
+        .skill-item { background: #0d1117; padding: 20px; text-align: center; border-radius: 12px; border: 1px solid #333; }
+        .skill-item i { font-size: 40px; color: #00ffd5; margin-bottom: 10px; }
+
+        /* MOBİL UYUM */
+        @media (max-width: 850px) {
+            section.active { flex-direction: column; text-align: center; }
+            .hero-content h1 { font-size: 30px; }
+            .glowing-circle { width: 250px; height: 250px; margin-top: 40px; }
+            .btn-box { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Görkemli <span>Yazılım</span></div>
+        <div class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars" id="menuIcon"></i></div>
+    </header>
+
+    <nav class="nav-links" id="navLinks">
+        <a href="#portfolio" onclick="showPage('portfolio')">Portfolyom</a>
+        <a href="#notes" onclick="showPage('notes')">Not</a>
+        <a href="#developer" onclick="showPage('developer')">Developer</a>
+    </nav>
+
+    <section id="portfolio" class="active">
+        <div class="hero-content">
+            <h1>Merhaba, ben [İSİM YAZIN]</h1>
+            <h3>Ben [ALANINIZI YAZIN]</h3>
+            <p>Yaş: [YAŞINIZI YAZIN] <br> Buraya kendinizle ilgili kaliteli bir açıklama metni gelecektir.</p>
+            <div class="btn-box">
+                <a href="#" class="btn btn-fill">CV</a>
+                <a href="#" class="btn btn-outline">Bana Ulaş</a>
+            </div>
+        </div>
+        <div class="image-container">
+            <div class="glowing-circle">
+                <img src="https://cdn-icons-png.flaticon.com/512/606/606161.png" alt="Logo">
+            </div>
+        </div>
+    </section>
+
+    <section id="notes">
+        <div class="note-card">
+            <h2>Kişisel Notlarım</h2>
+            <p style="margin-top: 10px;">[BURAYA NOTUNUZU YAZABİLİRSİNİZ]</p>
+            
+            <div class="media-item">
+                <h4><i class="fas fa-video"></i> Video Notu</h4>
+                <video controls><source src="video.mp4" type="video/mp4"></video>
+            </div>
+            <div class="media-item">
+                <h4><i class="fas fa-music"></i> Müzik</h4>
+                <audio controls><source src="muzik.mp3" type="audio/mpeg"></audio>
+            </div>
+        </div>
+    </section>
+
+    <section id="developer">
+        <div style="width: 100%;">
+            <h2 style="margin-bottom: 30px; text-align: center;">Yetenekler</h2>
+            <div class="skills-grid">
+                <div class="skill-item"><i class="fab fa-html5"></i><br>HTML5</div>
+                <div class="skill-item"><i class="fab fa-css3-alt"></i><br>CSS3</div>
+                <div class="skill-item"><i class="fab fa-js"></i><br>JS</div>
+                <div class="skill-item"><i class="fab fa-react"></i><br>React</div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function toggleMenu() {
+            const nav = document.getElementById('navLinks');
+            const icon = document.getElementById('menuIcon');
+            nav.classList.toggle('active');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            toggleMenu();
+        }
+    </script>
+</body>
+</html>
             width: 100%;
             padding: 20px 7%;
             display: flex;
